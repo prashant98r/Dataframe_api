@@ -1,7 +1,7 @@
 # Import necessary libraries
 import os
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, when
+from pyspark.sql.functions import col, when, initcap
 
 # Set the path to the Python interpreter
 os.environ["PYSPARK_PYTHON"] = "C:/Users/kprat/Documents/Python/Python/Python37/python.exe"
