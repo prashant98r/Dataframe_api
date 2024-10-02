@@ -28,7 +28,7 @@ students = [
 # Create DataFrame
 students_df = spark.createDataFrame(students).toDF("student_id", "name", "score", "subject")
 
-# Fix: Adding parentheses around the conditions
+
 students_df_with_grades = students_df.select(
     col("student_id"),
     col("name"),
