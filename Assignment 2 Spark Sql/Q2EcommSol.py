@@ -16,60 +16,53 @@ spark = (SparkSession.builder
 spark.sparkContext.setLogLevel("ERROR")
 
 # Sample Data
-students = [
-    (1, "Alice", 92, "Math"),
-    (2, "Bob", 85, "Math"),
-    (3, "Carol", 77, "Science"),
-    (4, "Dave", 65, "Science"),
-    (5, "Eve", 50, "Math"),
-    (6, "Frank", 82, "Science")
+products = [
+    (1, "Smartphone", 700, "Electronics"),
+    (2, "TV", 1200, "Electronics"),
+    (3, "Shoes", 150, "Apparel"),
+    (4, "Socks", 25, "Apparel"),
+    (5, "Laptop", 800, "Electronics"),
+    (6, "Jacket", 200, "Apparel")
 ]
 
-df1 = spark.createDataFrame(students).toDF("student_id", "name", "score", "subject")
-df1.show()
+df1 = spark.createDataFrame(products).toDF("product_id","product_name","price","category")
 
-df1.createOrReplaceTempView("students")
+df1.createOrReplaceTempView("products")
 
 spark.sql("""
             SELECT 
-            student_id,
-            name,
-            score,
-            subject,
+            *,
                 CASE
-                    WHEN score >= 90 THEN 'A'
-                    WHEN score >= 80 AND score <90 THEN 'A'
-                    WHEN score >= 70 AND score < 80 THEN 'C'
-                    WHEN score >= 60 AND score < 70 THEN 'D'
-                    ELSE 'F'
-                END as grade
-            FROM students
+                    WHEN price > 500 THEN 'Expensive'
+                    WHEN price >= 200 AND price <=500 THEN 'Moderate'
+                    ELSE 'Cheap'
+                END as price_category
+            FROM products
 
 
-""").createOrReplaceTempView("students_with_grades")
-
-spark.sql("""
-        SELECT 
-        subject,
-        avg(score) as avg_score_per_subject
-        FROM students_with_grades
-        GROUP BY subject
 """).show()
 
 spark.sql("""
         SELECT 
-        subject,
-        MAX(score) as max_score_per_subject,
-        MIN(score) as min_score_per_subject
-        FROM students_with_grades
-        GROUP BY subject
+        *
+        FROM products
+        WHERE product_name like "S%"
 """).show()
 
 spark.sql("""
         SELECT 
-        subject,
-        grade,
-        COUNT(student_id) as student_count
-        FROM students_with_grades
-        GROUP BY subject,grade
+        *
+        FROM products
+        WHERE product_name like "%s"
+""").show()
+
+spark.sql("""
+        SELECT 
+        category,
+        SUM(price) as total_price,
+        AVG(price) as average_price,
+        MAX(price) as maximum_price,
+        MIN(price) as minimum_price
+        FROM products
+        GROUP BY category
 """).show()
