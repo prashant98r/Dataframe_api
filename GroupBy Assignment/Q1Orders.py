@@ -38,8 +38,19 @@ order_df = spark.createDataFrame(order_data).toDF("order_id", "customer", "amoun
 
 
 df2 = order_df.groupBy("customer").agg(
-    count("order_id").alias("count of orders"),
-    sum("amount").alias("total order amount")
+    count("order_id").alias("count_of_orders"),
+    sum("amount").alias("total_order_amount")
 )
 df2.show()
 
+
+order_df.createOrReplaceTempView("orders_data")
+
+spark.sql("""
+            SELECT 
+            customer,
+            Count(order_id) as count_of_orders,
+            Sum(amount) as total_order_amount
+            FROM orders_data
+            GROUP BY customer
+""").show()
