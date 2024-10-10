@@ -1,6 +1,8 @@
 import os
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, when, avg, max, min, count
+from pyspark.sql.functions import *
+
+
 
 # Set the path to the Python interpreter
 os.environ["PYSPARK_PYTHON"] = "C:/Users/kprat/Documents/Python/Python/Python37/python.exe"
